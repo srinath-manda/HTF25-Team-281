@@ -1,0 +1,120 @@
+<div class="animate-fade-in">
+  <h2 class="text-3xl font-bold text-white mb-2">Web Application Threat Model</h2>
+  <p class="text-gray-400 mb-6">Understanding the threats GuardX is designed to mitigate. This model outlines common attack vectors against modern web applications.</p>
+
+  <div class="space-y-6">
+    <!-- Cross-Site Scripting (XSS) -->
+    <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+      <div class="p-6">
+        <h3 class="text-xl font-bold text-orange-400 mb-2">Cross-Site Scripting (XSS)</h3>
+        <p class="text-gray-300 mb-4">
+          XSS attacks occur when malicious scripts are injected into trusted websites. The attacker's script is then executed in the victim's browser, allowing the attacker to hijack user sessions, deface web sites, or redirect the user to malicious sites.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <h4 class="font-semibold text-white mb-1">Potential Impact</h4>
+            <ul class="list-disc list-inside text-gray-400 space-y-1">
+              <li>Session hijacking and cookie theft</li>
+              <li>Website defacement</li>
+              <li>Keystroke logging</li>
+              <li>Redirecting users to malicious sites</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-white mb-1">GuardX Mitigation</h4>
+            <ul class="list-disc list-inside text-gray-400 space-y-1">
+              <li>Inspects payloads for <code class="text-xs bg-gray-900 text-cyan-300 p-1 rounded">&lt;script&gt;</code> tags.</li>
+              <li>Blocks common event handlers like <code class="text-xs bg-gray-900 text-cyan-300 p-1 rounded">onerror</code>.</li>
+              <li>AI analysis detects obfuscated script patterns.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- SQL Injection (SQLi) -->
+    <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+      <div class="p-6">
+        <h3 class="text-xl font-bold text-red-400 mb-2">SQL Injection (SQLi)</h3>
+        <p class="text-gray-300 mb-4">
+          SQL Injection is a code injection technique used to attack data-driven applications. Malicious SQL statements are inserted into an entry field for execution, allowing an attacker to bypass authentication, view, modify, or delete data in a database.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <h4 class="font-semibold text-white mb-1">Potential Impact</h4>
+            <ul class="list-disc list-inside text-gray-400 space-y-1">
+              <li>Authentication bypass</li>
+              <li>Complete data exfiltration</li>
+              <li>Data corruption or deletion</li>
+              <li>Full database server takeover</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-white mb-1">GuardX Mitigation</h4>
+            <ul class="list-disc list-inside text-gray-400 space-y-1">
+              <li>Blocks classic SQLi syntax like <code class="text-xs bg-gray-900 text-cyan-300 p-1 rounded">' OR 1=1</code>.</li>
+              <li>Detects SQL comment characters <code class="text-xs bg-gray-900 text-cyan-300 p-1 rounded">--</code>.</li>
+              <li>Identifies keywords such as <code class="text-xs bg-gray-900 text-cyan-300 p-1 rounded">UNION</code>, <code class="text-xs bg-gray-900 text-cyan-300 p-1 rounded">SELECT</code>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Path Traversal -->
+     <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+      <div class="p-6">
+        <h3 class="text-xl font-bold text-indigo-400 mb-2">Path Traversal</h3>
+        <p class="text-gray-300 mb-4">
+          Also known as "dot dot slash," this attack aims to access files and directories stored outside the web root folder. By manipulating variables that reference files with <code class="text-xs bg-gray-900 text-cyan-300 p-1 rounded">../</code> sequences, an attacker can navigate up the directory tree and access sensitive system files.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <h4 class="font-semibold text-white mb-1">Potential Impact</h4>
+            <ul class="list-disc list-inside text-gray-400 space-y-1">
+              <li>Exposure of sensitive system files (e.g., <code class="text-xs bg-gray-900 text-cyan-300 p-1 rounded">/etc/passwd</code>)</li>
+              <li>Disclosure of application source code</li>
+              <li>Access to configuration files and credentials</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-white mb-1">GuardX Mitigation</h4>
+            <ul class="list-disc list-inside text-gray-400 space-y-1">
+              <li>Scans request paths for directory traversal patterns.</li>
+              <li>Normalizes paths to resolve sequences before checking.</li>
+              <li>Blocks requests containing suspicious file access attempts.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brute-Force Attacks -->
+    <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+      <div class="p-6">
+        <h3 class="text-xl font-bold text-purple-400 mb-2">Brute-Force Attacks</h3>
+        <p class="text-gray-300 mb-4">
+          A brute-force attack is a trial-and-error method used to obtain information such as a user password. In this type of attack, automated software is used to generate a large number of consecutive guesses as to the value of the desired data.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <h4 class="font-semibold text-white mb-1">Potential Impact</h4>
+            <ul class="list-disc list-inside text-gray-400 space-y-1">
+              <li>User account compromise and takeover</li>
+              <li>Denial of Service by overwhelming the login system</li>
+              <li>Credential stuffing success if passwords are reused</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-white mb-1">GuardX Mitigation</h4>
+            <ul class="list-disc list-inside text-gray-400 space-y-1">
+              <li>Implements rate limiting on login endpoints.</li>
+              <li>Temporarily blocks IPs after too many failed attempts.</li>
+              <li>Adaptive AI can identify automated attack patterns.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

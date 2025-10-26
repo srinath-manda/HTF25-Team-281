@@ -1,0 +1,5 @@
+{
+  "name": "GuardX",
+  "description": "An intelligent, adaptive Web Application Firewall that proactively detects and mitigates unknown threats by dynamically generating security rules in real-time, moving beyond the limitations of traditional signature-based firewalls.",
+  "requestFramePermissions": []
+}

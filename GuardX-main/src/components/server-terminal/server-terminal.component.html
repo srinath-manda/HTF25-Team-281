@@ -1,0 +1,28 @@
+<div class="animate-fade-in">
+  <h2 class="text-3xl font-bold text-white mb-2">Server Terminal</h2>
+  <p class="text-gray-400 mb-6">An interactive terminal to diagnose the deployed server and WAF status.</p>
+
+  <div #terminalOutput class="w-full h-[70vh] bg-black border border-gray-700 rounded-lg p-4 font-mono text-sm text-gray-300 overflow-y-auto whitespace-pre-wrap">
+    @for (line of output(); track $index) {
+      @if (line.isCommand) {
+        <div>
+          <span class="text-cyan-400">guardx-user@sim.guardx.io</span>:<span class="text-blue-400">~</span>$ {{ line.command }}
+        </div>
+      } @else {
+        <div class="text-gray-300">{{ line.response }}</div>
+      }
+    }
+    <div class="flex items-center">
+        <span class="text-cyan-400">guardx-user@sim.guardx.io</span>:<span class="text-blue-400">~</span>$&nbsp;
+        <input
+            type="text"
+            class="bg-transparent border-none focus:ring-0 flex-grow p-0 text-gray-300"
+            autofocus
+            [(ngModel)]="currentCommand"
+            (keydown.enter)="handleCommand()"
+            spellcheck="false"
+        />
+        <span class="cursor"></span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,146 @@
+<div class="animate-fade-in">
+  <h2 class="text-3xl font-bold text-white mb-2">Attacker Toolkit</h2>
+  <p class="text-gray-400 mb-6">Simulate real-world attacks against the Target Site to test the WAF's effectiveness.</p>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Left Column: AI & Manual Tools -->
+      <div class="space-y-6">
+          <!-- AI Attack Swarm -->
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+            <div class="flex items-center justify-between">
+              <div>
+                  <h3 class="text-xl font-semibold text-white mb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 text-cyan-400"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" /></svg>
+                    AI Attack Swarm
+                  </h3>
+                  <p class="text-sm text-gray-400">Launch a multi-stage, AI-driven attack sequence.</p>
+              </div>
+               @if(isAiAttacking()) {
+                  <button (click)="stopAiAttack()" class="px-4 py-2 bg-gray-600 text-white font-bold rounded-md hover:bg-gray-500 transition duration-200 flex items-center justify-center">
+                      <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.75a.75.75 0 011.5 0v12.5a.75.75 0 01-1.5 0V3.75zM12.5 3.75a.75.75 0 011.5 0v12.5a.75.75 0 01-1.5 0V3.75z" /></svg>
+                      Stop AI Swarm
+                  </button>
+              } @else {
+                  <button (click)="launchAiAttack()" class="px-4 py-2 bg-cyan-500 text-gray-900 font-bold rounded-md hover:bg-cyan-400 transition duration-200 flex items-center justify-center">
+                    Launch AI Swarm
+                  </button>
+              }
+            </div>
+            @if(aiAttackPlan().length > 0) {
+              <div class="mt-4 space-y-3">
+                @for(step of aiAttackPlan(); track step.id) {
+                  <div class="bg-gray-900/70 p-3 rounded-lg border border-gray-700">
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                          @if(step.status === 'In Progress') {
+                            <svg class="animate-spin h-5 w-5 text-cyan-400 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                          } @else if (step.status === 'Completed') {
+                            @if(step.success) {
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-green-500 mr-3"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" /></svg>
+                            } @else {
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-red-500 mr-3"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" /></svg>
+                            }
+                          } @else {
+                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-gray-500 mr-3"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-1.03-5.22a.75.75 0 0 1 0-1.06l1.72-1.72a.75.75 0 0 1 1.06 0l1.72 1.72a.75.75 0 1 1-1.06 1.06L11.5 11.81V13a.75.75 0 0 1-1.5 0v-1.19l-.97.97a.75.75 0 0 1-1.06 0Zm-3.12-1.63a.75.75 0 0 1 0 1.06l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72a.75.75 0 0 1 1.06 0Zm11.28 1.06a.75.75 0 0 1-1.06 0l-1.72-1.72a.75.75 0 0 1 1.06-1.06l1.72 1.72a.75.75 0 0 1 0 1.06ZM11.25 5a.75.75 0 0 1 .75.75v1.19l.97-.97a.75.75 0 0 1 1.06 1.06l-1.72 1.72a.75.75 0 0 1-1.06 0l-1.72-1.72a.75.75 0 0 1 1.06-1.06l.97.97V5.75A.75.75 0 0 1 11.25 5Z" clip-rule="evenodd" /></svg>
+                          }
+                          <p class="font-semibold text-sm" [class]="step.status === 'Pending' ? 'text-gray-400' : 'text-white'">{{ step.title }}</p>
+                        </div>
+                        @if(step.result) {
+                            <p class="text-xs font-semibold px-2 py-1 rounded-full" [class]="step.success ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'">
+                              {{ step.success ? 'Success' : 'Blocked' }}
+                            </p>
+                        }
+                      </div>
+                      @if(step.payload) {
+                        <div class="mt-2 pl-8">
+                           <code class="text-xs text-gray-400 font-mono bg-gray-800 p-2 rounded-md block truncate" title="{{step.payload}}">Payload: {{ step.payload }}</code>
+                        </div>
+                      }
+                  </div>
+                }
+              </div>
+            }
+        </div>
+
+        <!-- Manual Attack Tool -->
+        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 flex flex-col">
+          <h3 class="text-xl font-semibold text-white mb-2">Manual Attack Tool</h3>
+          <p class="text-sm text-gray-400 mb-4">Craft a custom request to probe for vulnerabilities.</p>
+          
+          <div class="grid grid-cols-3 gap-4 mb-4">
+              <div class="col-span-1">
+                <label for="endpoint" class="block text-sm font-medium text-gray-300 mb-2">Target Endpoint</label>
+                <select id="endpoint" [value]="manualEndpoint()" (change)="manualEndpoint.set($any($event.target).value)"
+                        class="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition font-mono">
+                    <option value="/reviews">POST /reviews</option>
+                    <option value="/login">POST /login</option>
+                    <option value="/products">POST /products</option>
+                </select>
+              </div>
+              <div class="col-span-2">
+                <label for="preset" class="block text-sm font-medium text-gray-300 mb-2">Load Preset Payload</label>
+                 <div class="flex flex-wrap gap-2">
+                    @for(preset of presetPayloads; track preset.name) {
+                        <button (click)="usePreset(preset)" class="text-xs px-3 py-1 rounded-md transition"
+                                [class]="preset.type === 'XSS' ? 'bg-orange-600/50 hover:bg-orange-500/50 text-orange-200' : preset.type === 'SQL Injection' ? 'bg-red-600/50 hover:bg-red-500/50 text-red-200' : 'bg-indigo-600/50 hover:bg-indigo-500/50 text-indigo-200'">
+                            {{ preset.name }}
+                        </button>
+                    }
+                </div>
+              </div>
+          </div>
+    
+          <div class="flex-grow">
+            <label for="manual_payload" class="block text-sm font-medium text-gray-300 mb-2">Payload Body</label>
+            <textarea id="manual_payload"
+                      rows="5"
+                      [value]="manualPayload()" 
+                      (input)="manualPayload.set($any($event.target).value)"
+                      placeholder="Enter your malicious payload here..."
+                      class="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition font-mono text-sm"></textarea>
+          </div>
+          <button (click)="launchManualAttack()" [disabled]="!manualPayload().trim()" class="mt-4 w-full px-4 py-2 bg-red-600 text-white font-bold rounded-md hover:bg-red-500 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+            Launch Manual Attack
+          </button>
+        </div>
+      </div>
+      
+      <!-- Right Column: Other tools and Attack Log -->
+      <div class="space-y-6">
+          <!-- Brute Force Attacker -->
+          <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 flex flex-col justify-between">
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">Brute-Force Attack</h3>
+              <p class="text-sm text-gray-400 mb-4">Launch rapid, automated login attempts with common passwords.</p>
+            </div>
+            @if(isBruteForcing()) {
+                <button (click)="stopBruteForce()" class="w-full px-4 py-2 bg-gray-600 text-white font-bold rounded-md hover:bg-gray-500 transition duration-200 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.75a.75.75 0 011.5 0v12.5a.75.75 0 01-1.5 0V3.75zM12.5 3.75a.75.75 0 011.5 0v12.5a.75.75 0 01-1.5 0V3.75z" /></svg>
+                    Stop Attack
+                </button>
+            } @else {
+                <button (click)="launchBruteForce()" class="w-full px-4 py-2 bg-purple-600 text-white font-bold rounded-md hover:bg-purple-500 transition duration-200 flex items-center justify-center">
+                  Launch Brute-Force
+                </button>
+            }
+          </div>
+  
+          <!-- Attack Log -->
+          <div class="bg-gray-800 rounded-lg border border-gray-700 h-[34rem] flex flex-col">
+            <h3 class="text-xl font-semibold text-white p-4 border-b border-gray-700">Attack Log</h3>
+            <div class="flex-grow overflow-y-auto">
+              @for(log of attackLog(); track log.timestamp) {
+                <div class="p-4 grid grid-cols-12 gap-4 border-b border-gray-700 text-sm hover:bg-gray-700/50">
+                  <div class="col-span-2 text-gray-400">{{ log.timestamp.toLocaleTimeString() }}</div>
+                  <div class="col-span-2 font-semibold" [class]="log.attackType.includes('XSS') ? 'text-orange-400' : log.attackType.includes('SQL') ? 'text-red-400' : log.attackType.includes('Brute') ? 'text-purple-400' : 'text-cyan-400'">{{ log.attackType }}</div>
+                  <div class="col-span-4 font-mono text-xs text-gray-300 truncate" title="{{ log.payload }}">{{ log.payload }}</div>
+                  <div class="col-span-4 font-semibold" [class]="log.success ? 'text-green-400' : 'text-red-400'">{{ log.result }}</div>
+                </div>
+              } @empty {
+                <p class="text-center text-gray-500 py-8">Launch an attack to see the results here.</p>
+              }
+            </div>
+          </div>
+      </div>
+  </div>
+</div>

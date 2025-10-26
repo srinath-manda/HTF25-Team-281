@@ -1,0 +1,110 @@
+<div class="animate-fade-in">
+  <h2 class="text-3xl font-bold text-white mb-6">Security Dashboard</h2>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 class="text-sm font-medium text-gray-400">TOTAL REQUESTS</h3>
+      <p class="text-3xl font-bold text-white mt-2">{{ stats().totalRequests.toLocaleString() }}</p>
+    </div>
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 class="text-sm font-medium text-gray-400">THREATS DETECTED</h3>
+      <p class="text-3xl font-bold text-orange-400 mt-2">{{ stats().threatsDetected.toLocaleString() }}</p>
+    </div>
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 class="text-sm font-medium text-gray-400">THREATS BLOCKED</h3>
+      <p class="text-3xl font-bold text-red-500 mt-2">{{ stats().threatsBlocked.toLocaleString() }}</p>
+    </div>
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 class="text-sm font-medium text-gray-400">ADAPTIVE RULES DEPLOYED</h3>
+      <p class="text-3xl font-bold text-cyan-400 mt-2">{{ stats().adaptiveRules.toLocaleString() }}</p>
+    </div>
+    @let hs = honeypotStats();
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 class="text-sm font-medium text-gray-400">HONEYPOT STATUS</h3>
+      <p class="text-xl font-bold mt-1 flex items-center" 
+         [class]="hs.status === 'Active' ? 'text-yellow-400' : hs.status === 'Under Attack' ? 'text-red-500 animate-pulse' : 'text-gray-500'">
+        @if (hs.status === 'Under Attack') {
+          <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>
+        }
+        {{ hs.status }}
+      </p>
+      <p class="text-sm text-gray-300">{{ hs.luredAttackers.toLocaleString() }} Lured Attackers</p>
+    </div>
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 class="text-sm font-medium text-gray-400">SYSTEM UPTIME</h3>
+      <p class="text-3xl font-bold text-green-400 mt-2">{{ stats().uptime }}</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+    <!-- Recent Threats -->
+    <div class="lg:col-span-3 bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 class="text-xl font-semibold text-white mb-4">Recent Threats</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-gray-700 text-sm text-gray-400">
+              <th class="py-3 px-4 font-medium">Timestamp</th>
+              <th class="py-3 px-4 font-medium">Source IP</th>
+              <th class="py-3 px-4 font-medium">Threat Type</th>
+              <th class="py-3 px-4 font-medium">Severity</th>
+              <th class="py-3 px-4 font-medium">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(threat of recentThreats(); track threat.id) {
+              <tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                <td class="py-3 px-4 text-sm">{{ threat.timestamp.toLocaleTimeString() }}</td>
+                <td class="py-3 px-4 text-sm">{{ threat.ip }}</td>
+                <td class="py-3 px-4 text-sm">{{ threat.threatType }}</td>
+                <td class="py-3 px-4 text-sm font-bold" [class]="getSeverityClass(threat.threatLevel)">{{ threat.threatLevel }}</td>
+                <td class="py-3 px-4 text-sm">
+                  <span class="px-2 py-1 rounded-full text-xs font-semibold"
+                        [class]="threat.action === 'Blocked' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'">
+                    {{ threat.action }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="text-center py-8 text-gray-500">No threats detected recently.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Threat Distribution -->
+    <div class="lg:col-span-2 bg-gray-800 p-6 rounded-lg border border-gray-700">
+      <h3 class="text-xl font-semibold text-white mb-4">Top Attack Vectors</h3>
+      <div class="space-y-4">
+        @for(threat of threatTypeCounts(); track threat[0]) {
+          @let percentage = (threat[1] / maxThreatCount()) * 100;
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-sm text-gray-300">{{ threat[0] }}</span>
+              <span class="text-sm font-bold text-cyan-400">{{ threat[1] }}</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-2.5">
+              <div class="bg-cyan-400 h-2.5 rounded-full" [style.width.%]="percentage"></div>
+            </div>
+          </div>
+        } @empty {
+          <p class="text-center py-8 text-gray-500">No threat data available.</p>
+        }
+      </div>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 gap-6 mt-6">
+      <!-- Geo Threat Feed -->
+    <div class="lg:col-span-1 bg-gray-800 p-6 rounded-lg border border-gray-700">
+       <h3 class="text-xl font-semibold text-white mb-4">Live Threat Map</h3>
+       <div class="h-96 w-full rounded-md bg-gray-900">
+         <app-threat-map></app-threat-map>
+       </div>
+    </div>
+  </div>
+</div>

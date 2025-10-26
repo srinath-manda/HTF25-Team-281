@@ -1,0 +1,206 @@
+<div class="animate-fade-in">
+  <h2 class="text-3xl font-bold text-white mb-2">Adaptive Defense Engine</h2>
+  <p class="text-gray-400 mb-6">The WAF is automatically analyzing unclassified threats and deploying new rules in real-time.</p>
+
+  <div class="bg-gray-800 rounded-lg border border-gray-700 shadow-lg">
+    <div class="p-4 border-b border-gray-700">
+        <h3 class="text-xl font-semibold text-white">Dynamically Deployed Rules</h3>
+    </div>
+    <div class="max-h-[60vh] overflow-y-auto">
+       <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-gray-700 text-sm text-gray-400">
+              <th class="py-3 px-4 font-medium">Timestamp</th>
+              <th class="py-3 px-4 font-medium">Threat Type</th>
+              <th class="py-3 px-4 font-medium">Description</th>
+              <th class="py-3 px-4 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(rule of adaptiveRules(); track rule.id) {
+              <tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                <td class="py-3 px-4 text-sm text-gray-400">{{ rule.timestamp.toLocaleTimeString() }}</td>
+                <td class="py-3 px-4 text-sm font-semibold text-cyan-400">{{ rule.threatType }}</td>
+                <td class="py-3 px-4 text-sm text-gray-300">{{ rule.description }}</td>
+                <td class="py-3 px-4 text-sm">
+                   <span class="px-2 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400">
+                    {{ rule.status }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4" class="text-center py-8 text-gray-500">No adaptive rules deployed yet. Monitoring for anomalies...</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+    <button (click)="toggleGeneratorSandbox()" class="text-cyan-400 hover:text-cyan-300 font-semibold flex items-center justify-start text-left">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" /></svg>
+      AI Payload Generation Sandbox
+      <svg class="w-5 h-5 ml-auto transition-transform" [class]="generatorSandboxOpen() ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <button (click)="toggleSandbox()" class="text-cyan-400 hover:text-cyan-300 font-semibold flex items-center justify-start text-left">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+      Threat Analysis Sandbox
+      <svg class="w-5 h-5 ml-auto transition-transform" [class]="sandboxOpen() ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+  </div>
+  
+  @if (generatorSandboxOpen()) {
+    <div class="mt-4 bg-gray-800 p-6 rounded-lg border border-gray-700 animate-fade-in">
+       <div class="flex justify-between items-start mb-4">
+        <p class="text-gray-400 text-sm max-w-xl">Describe the attack you want to perform in natural language. The AI will generate a payload tailored to the current security level.</p>
+        <div class="text-sm font-bold p-2 rounded-md whitespace-nowrap" [class]="getSecurityLevelClass(securityLevel())">
+            Targeting: {{ securityLevel() }} Security
+        </div>
+      </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="md:col-span-2">
+            <label for="prompt" class="block text-sm font-medium text-gray-300 mb-2">Attack Prompt</label>
+            <textarea id="prompt"
+                      name="prompt"
+                      rows="3"
+                      [value]="generationPrompt()" 
+                      (input)="generationPrompt.set($any($event.target).value)"
+                      placeholder="e.g., create a javascript alert that says 'hacked'"
+                      class="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition"></textarea>
+          </div>
+          <div>
+            <label for="target_param" class="block text-sm font-medium text-gray-300 mb-2">Target Parameter <span class="text-gray-500">(Optional)</span></label>
+            <input id="target_param"
+                   name="target_param"
+                   type="text"
+                   [value]="generationTarget()"
+                   (input)="generationTarget.set($any($event.target).value)"
+                   placeholder="e.g., comment_text"
+                   class="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition font-mono">
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-gray-400">Examples:</span>
+            @for(ex of examplePrompts; track ex) {
+              <button (click)="useExamplePrompt(ex)" class="text-xs bg-gray-700 hover:bg-cyan-400 hover:text-gray-900 text-gray-300 px-2 py-1 rounded-md transition">{{ex}}</button>
+            }
+          </div>
+          <button (click)="generatePayload()" 
+                  [disabled]="isLoadingGeneration() || !generationPrompt().trim()"
+                  class="px-6 py-2 bg-cyan-400 text-gray-900 font-bold rounded-md hover:bg-cyan-300 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+            @if(isLoadingGeneration()) {
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              Generating...
+            } @else {
+              Generate Payload
+            }
+          </button>
+        </div>
+        @if (generationError()) {
+          <div class="mt-6 bg-red-900/50 border border-red-700 text-red-300 p-4 rounded-lg"><p><span class="font-bold">Error:</span> {{ generationError() }}</p></div>
+        }
+        @if(generationResult(); as result) {
+          <div class="mt-6 bg-gray-900/80 rounded-lg border border-gray-700 animate-fade-in">
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-white mb-4">Generated Payload</h3>
+              <div>
+                  <h4 class="text-sm font-medium text-gray-400 mb-1">Attack Type</h4>
+                  <p class="text-lg font-semibold text-cyan-400">{{ result.attackType }}</p>
+              </div>
+               <div class="mt-4">
+                <h4 class="text-sm font-medium text-gray-400 mb-1">Description</h4>
+                <p class="text-gray-300 leading-relaxed">{{ result.description }}</p>
+              </div>
+              <div class="mt-4">
+                <h4 class="text-sm font-medium text-gray-400 mb-2">Payload</h4>
+                <code class="block bg-gray-900 border border-gray-600 text-cyan-300 p-4 rounded-md whitespace-pre-wrap font-mono text-sm">{{ result.payload }}</code>
+              </div>
+              <div class="mt-4 flex space-x-4">
+                 <button (click)="sendToAttackerTools(result.payload)" class="px-4 py-2 bg-red-600 text-white font-bold rounded-md hover:bg-red-500 transition duration-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2"><path d="M14.5 2.5a2.5 2.5 0 0 0-2.5 2.5V5h-1v.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V5h-1V2.5ZM10 2.5a2.5 2.5 0 0 0-2.5 2.5V5h-1v.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V5h-1V2.5ZM5.5 2.5A2.5 2.5 0 0 0 3 5v.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V5h-1V2.5Z" /><path d="M2 10.5a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-1ZM18 10.5a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-1Z" /><path fill-rule="evenodd" d="M10 6.5a3.5 3.5 0 0 0-3.5 3.5v2.5a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5v-2.5A3.5 3.5 0 0 0 10 6.5Zm-2.5 3.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5Z" clip-rule="evenodd" /></svg>
+                    Send to Attacker Tools
+                 </button>
+              </div>
+            </div>
+          </div>
+        }
+    </div>
+  }
+
+  @if (sandboxOpen()) {
+    <div class="mt-4 bg-gray-800 p-6 rounded-lg border border-gray-700 animate-fade-in">
+        <p class="text-gray-400 mb-4 text-sm">Manually analyze a suspicious payload to understand potential threats and get rule suggestions.</p>
+        <div class="mb-4">
+          <label for="payload" class="block text-sm font-medium text-gray-300 mb-2">Suspicious Payload</label>
+          <textarea id="payload"
+                    name="payload"
+                    rows="4"
+                    [value]="payload()" 
+                    (input)="payload.set($any($event.target).value)"
+                    placeholder="e.g., ' or 1=1; --"
+                    class="w-full bg-gray-900 border border-gray-600 rounded-md p-3 text-gray-200 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition font-mono"></textarea>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-gray-400">Examples:</span>
+            @for(ex of examplePayloads; track ex) {
+              <button (click)="useExample(ex)" class="text-xs bg-gray-700 hover:bg-cyan-400 hover:text-gray-900 text-gray-300 px-2 py-1 rounded-md font-mono transition">{{ex}}</button>
+            }
+          </div>
+          <button (click)="analyzePayload()" 
+                  [disabled]="isLoading() || !payload().trim()"
+                  class="px-6 py-2 bg-cyan-400 text-gray-900 font-bold rounded-md hover:bg-cyan-300 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+            @if(isLoading()) {
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Analyzing...
+            } @else {
+              Analyze
+            }
+          </button>
+        </div>
+
+        @if (analysisError()) {
+          <div class="mt-6 bg-red-900/50 border border-red-700 text-red-300 p-4 rounded-lg">
+            <p><span class="font-bold">Error:</span> {{ analysisError() }}</p>
+          </div>
+        }
+
+        @if(analysisResult(); as result) {
+          <div class="mt-6 bg-gray-900/80 rounded-lg border border-gray-700 animate-fade-in">
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-white mb-4">Manual Analysis Result</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="text-sm font-medium text-gray-400 mb-1">Threat Type</h4>
+                  <p class="text-lg font-semibold text-cyan-400">{{ result.threatType }}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-400 mb-1">Severity</h4>
+                  <p class="text-lg font-bold p-2 rounded-md inline-block" [class]="getSeverityClass(result.severity)">{{ result.severity }}</p>
+                </div>
+              </div>
+              <div class="mt-6">
+                <h4 class="text-sm font-medium text-gray-400 mb-1">Explanation</h4>
+                <p class="text-gray-300 leading-relaxed">{{ result.explanation }}</p>
+              </div>
+            </div>
+            <div class="bg-gray-900/50 p-6 border-t border-gray-700 rounded-b-lg">
+              <h4 class="text-sm font-medium text-gray-400 mb-2">Suggested Rule</h4>
+              <code class="block bg-gray-900 border border-gray-600 text-cyan-300 p-4 rounded-md whitespace-pre-wrap font-mono text-sm">{{ result.suggestedRule }}</code>
+            </div>
+          </div>
+        }
+    </div>
+  }
+</div>

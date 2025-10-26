@@ -1,0 +1,58 @@
+<div class="animate-fade-in text-gray-300 max-w-5xl mx-auto">
+  <h2 class="text-4xl font-bold text-white mb-4 text-center">About GuardX</h2>
+  <p class="text-lg text-gray-400 mb-8 text-center">An Intelligent, Adaptive Web Application Firewall for the Next Generation of Threats.</p>
+
+  <!-- Project Purpose -->
+  <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 mb-8">
+    <h3 class="text-2xl font-bold text-cyan-400 mb-3">Project Purpose</h3>
+    <p>
+      This project was developed for the <span class="font-semibold text-white">COSC - Hacktoberfest : Hackathon</span>. Our goal was to move beyond the limitations of traditional, signature-based firewalls by creating a smart, proactive, and self-improving security system. GuardX is a high-fidelity simulation that demonstrates how modern AI can be leveraged to create a Web Application Firewall (WAF) that not only blocks known threats but also learns from new, unseen attacks to dynamically harden its defenses in real-time.
+    </p>
+  </div>
+  
+  <!-- How it Works -->
+  <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 mb-8">
+    <h3 class="text-2xl font-bold text-cyan-400 mb-3">The Adaptive Defense Engine</h3>
+    <p class="mb-4">
+      The core of GuardX is its AI-powered <span class="font-semibold text-white">Adaptive Defense Engine</span>. Unlike traditional WAFs that rely on manually updated lists of attack patterns, GuardX uses Google's Gemini API to analyze and respond to threats intelligently.
+    </p>
+    <ol class="list-decimal list-inside space-y-3 text-gray-400">
+      <li><span class="font-semibold text-gray-200">Threat Identification:</span> The WAF inspects all incoming traffic. When it blocks a request that matches a known threat pattern (e.g., a basic SQL Injection), it logs it and prevents it from reaching the target application.</li>
+      <li><span class="font-semibold text-gray-200">Analysis of the Unknown:</span> When a request is blocked that does <span class="italic">not</span> match a pre-defined signature, the WAF flags it as a potential zero-day or obfuscated attack. The malicious payload is securely sent to the Gemini API for deep analysis.</li>
+      <li><span class="font-semibold text-gray-200">AI-Powered Rule Generation:</span> The Gemini model analyzes the payload's structure, intent, and attack vector. It then generates a concise, human-readable description for a new, dynamic security rule designed to mitigate this specific threat vector.</li>
+      <li><span class="font-semibold text-gray-200">Real-Time Deployment:</span> This newly generated rule is instantly deployed to the WAF's rule set, which you can see on the "Adaptive Defense" page. The firewall is now equipped to block this new attack pattern and its variants, effectively learning and adapting from the threats it encounters.</li>
+    </ol>
+  </div>
+
+  <!-- Meet the Team -->
+  <div class="bg-gray-800 p-8 rounded-lg border border-gray-700">
+    <h3 class="text-2xl font-bold text-cyan-400 mb-8 text-center tracking-wider">Meet the Team (TEAM NO- 281)</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Member Card -->
+      <div class="bg-gray-900 p-6 rounded-lg border border-gray-700 text-center transform hover:scale-105 hover:border-cyan-400 transition-all duration-300">
+        <h4 class="text-xl font-semibold text-white">Vasanthadithya</h4>
+        <p class="text-gray-400 font-mono mt-1">160123749049</p>
+      </div>
+      <!-- Member Card -->
+      <div class="bg-gray-900 p-6 rounded-lg border border-gray-700 text-center transform hover:scale-105 hover:border-cyan-400 transition-all duration-300">
+        <h4 class="text-xl font-semibold text-white">Harini</h4>
+        <p class="text-gray-400 font-mono mt-1">160123749015</p>
+      </div>
+      <!-- Member Card -->
+      <div class="bg-gray-900 p-6 rounded-lg border border-gray-700 text-center transform hover:scale-105 hover:border-cyan-400 transition-all duration-300">
+        <h4 class="text-xl font-semibold text-white">Manpreet</h4>
+        <p class="text-gray-400 font-mono mt-1">160123749013</p>
+      </div>
+      <!-- Member Card -->
+      <div class="bg-gray-900 p-6 rounded-lg border border-gray-700 text-center transform hover:scale-105 hover:border-cyan-400 transition-all duration-300">
+        <h4 class="text-xl font-semibold text-white">Ridhima</h4>
+        <p class="text-gray-400 font-mono mt-1">160123749018</p>
+      </div>
+      <!-- Member Card -->
+      <div class="bg-gray-900 p-6 rounded-lg border border-gray-700 text-center transform hover:scale-105 hover:border-cyan-400 transition-all duration-300 lg:col-start-2">
+        <h4 class="text-xl font-semibold text-white">Srinath</h4>
+        <p class="text-gray-400 font-mono mt-1">160123749303</p>
+      </div>
+    </div>
+  </div>
+</div>

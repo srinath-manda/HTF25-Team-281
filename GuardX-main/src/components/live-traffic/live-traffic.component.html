@@ -1,0 +1,42 @@
+<div class="animate-fade-in">
+  <h2 class="text-3xl font-bold text-white mb-6">Live Traffic Feed</h2>
+  <div class="bg-gray-800 rounded-lg border border-gray-700 shadow-lg">
+    <div class="p-4 border-b border-gray-700 text-sm text-gray-400 grid grid-cols-14 gap-4 font-medium">
+      <div class="col-span-1">Timestamp</div>
+      <div class="col-span-2">Source IP</div>
+      <div class="col-span-2">ASN</div>
+      <div class="col-span-1">Method</div>
+      <div class="col-span-2">Path</div>
+      <div class="col-span-3">User Agent</div>
+      <div class="col-span-2">Threat Type</div>
+      <div class="col-span-1">Action</div>
+    </div>
+    <div class="max-h-[70vh] overflow-y-auto">
+      @for (log of logs(); track log.id) {
+        <div class="p-4 grid grid-cols-14 gap-4 border-b text-sm items-center transition-all duration-300 ease-in-out hover:bg-gray-700/50"
+             [class]="getThreatColor(log.threatLevel)">
+          <div class="col-span-1 text-gray-400">{{ log.timestamp.toLocaleTimeString('en-US', { hour12: false }) }}</div>
+          <div class="col-span-2 font-mono text-cyan-400">{{ log.ip }}</div>
+          <div class="col-span-2 text-gray-400 truncate">{{ log.asn }}</div>
+          <div class="col-span-1 font-semibold" 
+               [class]="log.method === 'GET' ? 'text-green-400' : log.method === 'POST' ? 'text-blue-400' : 'text-yellow-400'">
+            {{ log.method }}
+          </div>
+          <div class="col-span-2 truncate text-gray-300">{{ log.path }}</div>
+          <div class="col-span-3 truncate text-gray-400 font-mono text-xs">{{ log.userAgent }}</div>
+          <div class="col-span-2 font-medium" 
+               [class]="log.threatLevel === 'Critical' ? 'text-red-400' : log.threatLevel === 'High' ? 'text-orange-400' : 'text-gray-400'">
+            {{ log.threatType || 'N/A' }}
+          </div>
+          <div class="col-span-1">
+            <span class="px-2 py-1 text-xs font-semibold rounded-full" [class]="getActionBadge(log.action)">
+              {{ log.action }}
+            </span>
+          </div>
+        </div>
+      } @empty {
+        <div class="text-center p-8 text-gray-500">Awaiting incoming traffic...</div>
+      }
+    </div>
+  </div>
+</div>
